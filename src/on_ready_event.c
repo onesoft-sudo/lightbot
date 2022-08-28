@@ -1,5 +1,5 @@
 /*
-* on_ready_events.c -- define the ready event handler
+* on_ready_event.c -- define the ready event handler
 *
 * Copyright (C) 2022 OSN Inc.
 *
