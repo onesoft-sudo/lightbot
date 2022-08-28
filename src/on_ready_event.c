@@ -20,7 +20,7 @@
 #include <on_ready_event.h>
 
 void
-on_ready(discord_t *client, const struct discord_ready *event)
+on_ready(struct discord *client, const struct discord_ready *event)
 {
     printf("Logged in as %s#%s!\n", event->user->username, event->user->discriminator);
 }

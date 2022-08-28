@@ -1,5 +1,5 @@
 /*
-* main.c -- entry point of the bot
+* spark.c -- entry point of the bot
 *
 * Copyright (C) 2022 OSN Inc.
 *
@@ -22,20 +22,32 @@
 #include <string.h>
 #include <on_ready_event.h>
 #include <commands.h>
+#include <json-c/json.h>
+#include <json_config.h>
 
-bool test(struct discord *client, const struct discord_message *message, char **args)
-{
-    struct discord_create_message reply = {
-            .content = "Test success!"
-    };
-
-    discord_create_message(client, message->channel_id, &reply, NULL);
-}
-
+json_object *config;
 
 void on_message_create(struct discord *client, const struct discord_message *message)
 {
     if (message->author->bot) {
+        return;
+    }
+
+    json_object *guild_config = get_config_by_guild_id(config, message->guild_id);
+
+    puts(json_object_to_json_string(guild_config));
+
+    json_object *prefix_object;
+
+    if (!json_object_object_get_ex(guild_config, "prefix", &prefix_object)) {
+        puts("error parse");
+        exit(-1);
+    }
+
+    const char *prefix = json_object_get_string(prefix_object);
+
+    if (message->content[0] != prefix[0]) {
+        puts("message does not contain prefix");
         return;
     }
 
@@ -47,36 +59,27 @@ void on_message_create(struct discord *client, const struct discord_message *mes
         discord_create_message(client, message->channel_id, &reply, NULL);
         return;
     }
-
-    if (message->content[0] != '-') {
-        return;
-    }
-
-    commands_t commands = {
-            .commands = {
-                    &test
-            }
-    };
-
-    command_t *command = find_command(&commands, "test");
-
-    if (command == NULL) {
-        puts("Command not found");
-    }
-    else {
-        char *argv = {"abc"};
-        command->callback(client, message, &argv);
-    }
 }
-
+    
 int main()
 {
     printf("Spark Bot!\n");
+
+    config = json_object_from_file("config/config.json");
+
+    if (config == NULL) {
+        puts("fatal error: failed to read config file");
+        exit(-1);
+    }
+
+    puts(json_object_to_json_string(config));
 
     struct discord *client = discord_init(getenv("TOKEN"));
     discord_set_on_ready(client, &on_ready);
     discord_set_on_message_create(client, &on_message_create);
     discord_run(client);
+
+    json_object_put(config);
 
     return 0;
 }

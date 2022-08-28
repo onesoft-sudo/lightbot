@@ -99,8 +99,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_spark_OBJECTS = spark-main.$(OBJEXT) spark-on_ready_event.$(OBJEXT) \
-	spark-commands.$(OBJEXT)
+am_spark_OBJECTS = spark-spark.$(OBJEXT) \
+	spark-on_ready_event.$(OBJEXT) spark-commands.$(OBJEXT) \
+	spark-json_config.$(OBJEXT)
 spark_OBJECTS = $(am_spark_OBJECTS)
 spark_DEPENDENCIES =
 spark_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(spark_LDFLAGS) \
@@ -121,7 +122,8 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/spark-commands.Po \
-	./$(DEPDIR)/spark-main.Po ./$(DEPDIR)/spark-on_ready_event.Po
+	./$(DEPDIR)/spark-json_config.Po \
+	./$(DEPDIR)/spark-on_ready_event.Po ./$(DEPDIR)/spark-spark.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -255,9 +257,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-spark_SOURCES = main.c on_ready_event.c commands.c
+spark_SOURCES = spark.c on_ready_event.c commands.c json_config.c
 spark_LDFLAGS = -pthread
-spark_LDADD = -lpthread -ldiscord -lcurl
+spark_LDADD = -lpthread -ljson-c -ldiscord -lcurl
 spark_CPPFLAGS = -I$(top_srcdir)/include
 all: all-am
 
@@ -346,8 +348,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spark-commands.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spark-main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spark-json_config.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spark-on_ready_event.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spark-spark.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -369,19 +372,19 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-spark-main.o: main.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT spark-main.o -MD -MP -MF $(DEPDIR)/spark-main.Tpo -c -o spark-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spark-main.Tpo $(DEPDIR)/spark-main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='spark-main.o' libtool=no @AMDEPBACKSLASH@
+spark-spark.o: spark.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT spark-spark.o -MD -MP -MF $(DEPDIR)/spark-spark.Tpo -c -o spark-spark.o `test -f 'spark.c' || echo '$(srcdir)/'`spark.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spark-spark.Tpo $(DEPDIR)/spark-spark.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='spark.c' object='spark-spark.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o spark-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o spark-spark.o `test -f 'spark.c' || echo '$(srcdir)/'`spark.c
 
-spark-main.obj: main.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT spark-main.obj -MD -MP -MF $(DEPDIR)/spark-main.Tpo -c -o spark-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spark-main.Tpo $(DEPDIR)/spark-main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='spark-main.obj' libtool=no @AMDEPBACKSLASH@
+spark-spark.obj: spark.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT spark-spark.obj -MD -MP -MF $(DEPDIR)/spark-spark.Tpo -c -o spark-spark.obj `if test -f 'spark.c'; then $(CYGPATH_W) 'spark.c'; else $(CYGPATH_W) '$(srcdir)/spark.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spark-spark.Tpo $(DEPDIR)/spark-spark.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='spark.c' object='spark-spark.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o spark-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o spark-spark.obj `if test -f 'spark.c'; then $(CYGPATH_W) 'spark.c'; else $(CYGPATH_W) '$(srcdir)/spark.c'; fi`
 
 spark-on_ready_event.o: on_ready_event.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT spark-on_ready_event.o -MD -MP -MF $(DEPDIR)/spark-on_ready_event.Tpo -c -o spark-on_ready_event.o `test -f 'on_ready_event.c' || echo '$(srcdir)/'`on_ready_event.c
@@ -410,6 +413,20 @@ spark-commands.obj: commands.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='commands.c' object='spark-commands.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o spark-commands.obj `if test -f 'commands.c'; then $(CYGPATH_W) 'commands.c'; else $(CYGPATH_W) '$(srcdir)/commands.c'; fi`
+
+spark-json_config.o: json_config.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT spark-json_config.o -MD -MP -MF $(DEPDIR)/spark-json_config.Tpo -c -o spark-json_config.o `test -f 'json_config.c' || echo '$(srcdir)/'`json_config.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spark-json_config.Tpo $(DEPDIR)/spark-json_config.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='json_config.c' object='spark-json_config.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o spark-json_config.o `test -f 'json_config.c' || echo '$(srcdir)/'`json_config.c
+
+spark-json_config.obj: json_config.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT spark-json_config.obj -MD -MP -MF $(DEPDIR)/spark-json_config.Tpo -c -o spark-json_config.obj `if test -f 'json_config.c'; then $(CYGPATH_W) 'json_config.c'; else $(CYGPATH_W) '$(srcdir)/json_config.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spark-json_config.Tpo $(DEPDIR)/spark-json_config.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='json_config.c' object='spark-json_config.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(spark_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o spark-json_config.obj `if test -f 'json_config.c'; then $(CYGPATH_W) 'json_config.c'; else $(CYGPATH_W) '$(srcdir)/json_config.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -538,8 +555,9 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/spark-commands.Po
-	-rm -f ./$(DEPDIR)/spark-main.Po
+	-rm -f ./$(DEPDIR)/spark-json_config.Po
 	-rm -f ./$(DEPDIR)/spark-on_ready_event.Po
+	-rm -f ./$(DEPDIR)/spark-spark.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -586,8 +604,9 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/spark-commands.Po
-	-rm -f ./$(DEPDIR)/spark-main.Po
+	-rm -f ./$(DEPDIR)/spark-json_config.Po
 	-rm -f ./$(DEPDIR)/spark-on_ready_event.Po
+	-rm -f ./$(DEPDIR)/spark-spark.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

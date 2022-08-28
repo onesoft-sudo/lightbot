@@ -22,9 +22,7 @@
 
 #include <concord/discord.h>
 
-typedef struct discord discord_t;
-
 void
-on_ready(discord_t *client, const struct discord_ready *event);
+on_ready(struct discord *client, const struct discord_ready *event);
 
 #endif /* SPARK_ON_READY_EVENT_H  */

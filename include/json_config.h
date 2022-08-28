@@ -1,5 +1,5 @@
 /*
- commands.h -- declare the command handler
+ json_config.h -- declare the config management functions
 
  Copyright (C) 2022 OSN Inc.
 
@@ -16,19 +16,13 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-#ifndef SPARK_COMMANDS_H
-#define SPARK_COMMANDS_H
+#ifndef SPARK_CONFIG_H
+#define SPARK_CONFIG_H
 
-#include <stdbool.h>
-#include <concord/discord.h>
+#include <json-c/json.h>
+#define SNOWFLAKE_MAX 4096
 
-typedef bool (*callback_t)(struct discord *, const struct discord_message *, char **argv);
+json_object *get_config_by_guild_id(json_object *, u64snowflake);
 
-typedef struct {
-    char *name;
-    callback_t callback;
-} command_t;
+#endif /* SPARK_CONFIG_H  */
 
-command_t *find_command(command_t **, char *);
-
-#endif /* SPARK_COMMANDS_H  */

@@ -19,16 +19,18 @@
 #include <string.h>
 #include <commands.h>
 
-command_t *find_command(commands_t *commands, char *name)
+command_t *find_command(command_t **commands, char *name)
 {
     int index = 0;
-    int length = (sizeof commands->commands) / sizeof (command_t);
+    int length = (sizeof commands) / sizeof (command_t);
 
     while (index < length) {
-        command_t command = commands->commands[index];
+        command_t *command = commands[index];
 
-        if (strcmp(command.name, name) == 0) {
-            return &command;
+        printf("%d Time\n", index);
+
+        if (strcmp(command->name, name) == 0) {
+            return commands[index];
         }
 
         index++;
