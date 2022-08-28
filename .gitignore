@@ -1,0 +1,25 @@
+# Editor and IDE config
+.idea/
+.vscode/
+
+# Environment secrets
+.env
+
+# Build files
+autom4te.cache/
+cmake-build-debug/
+**/.deps
+stamp-h1
+config.status
+config.h
+CMakeLists.txt
+Makefile
+installation/
+*.log
+
+# Executables, shared/static object files
+*.exe
+*.o
+*.so
+*.a
+*.stackdump
