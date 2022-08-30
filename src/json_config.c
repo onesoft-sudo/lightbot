@@ -24,7 +24,7 @@
 #include <concord/types.h>
 #include <json_config.h>
 
-#define CONFIG_FILE_PATH "config/config.json"
+#define CONFIG_FILE_PATH "etc/light/config.json"
 
 bool json_config_init(json_object **config) 
 {

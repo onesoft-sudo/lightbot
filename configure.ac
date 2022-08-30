@@ -7,6 +7,7 @@ AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall])
+AM_SILENT_RULES([yes])
 AC_CONFIG_MACRO_DIR([m4])
 
 # Checks for programs.

@@ -1,5 +1,5 @@
 /*
-* spark.c -- entry point of the bot
+* light.c -- entry point of the bot
 *
 * Copyright (C) 2022 OSN Inc.
 *
@@ -16,6 +16,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
 #include <stdio.h>
 #include <concord/discord.h>
 #include <stdlib.h>
@@ -63,7 +64,7 @@ void on_message_create(struct discord *client, const struct discord_message *mes
     
 int main()
 {
-    printf("Spark Bot!\n");
+    printf("Light Bot!\n");
 
     config = json_object_from_file("config/config.json");
 
