@@ -1,4 +1,4 @@
-include_headers = commands.h \
+include_HEADERS = commands.h \
                   common.h \
                   json_config.h \
                   on_ready_event.h \
