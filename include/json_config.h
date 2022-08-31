@@ -16,13 +16,17 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-#ifndef SPARK_CONFIG_H
-#define SPARK_CONFIG_H
+#ifndef SPARK_JSON_CONFIG_H
+#define SPARK_JSON_CONFIG_H
 
 #include <json-c/json.h>
-#define SNOWFLAKE_MAX 4096
+#include <concord/types.h>
 
+#define SNOWFLAKE_MAX 4096
+#define CONFIG_FILE_PATH "etc/light/config.json"
+
+bool json_config_init(json_object **);
 json_object *get_config_by_guild_id(json_object *, u64snowflake);
 
-#endif /* SPARK_CONFIG_H  */
+#endif /* SPARK_JSON_CONFIG_H  */
 

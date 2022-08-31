@@ -1,5 +1,5 @@
 /*
- commands.c -- define the command handler
+ commands.c -- define the commands
 
  Copyright (C) 2022 OSN Inc.
 
@@ -16,23 +16,36 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
+#include <stdlib.h>
 #include <string.h>
 #include <commands.h>
+#include <shortcuts.h>
+#include <concord/discord.h>
 
-command_t *find_command(command_t **commands, char *name)
+void command_view_shortcut(struct discord *client, const struct discord_message *message)
 {
-    int index = 0;
-    int length = (sizeof commands) / sizeof (command_t);
+    strtok(message->content, " ");
+    char *token = strtok(NULL, " ");
 
-    while (index < length) {
-        command_t *command = commands[index];
-
-        printf("%d Time\n", index);
-
-        if (strcmp(command->name, name) == 0) {
-            return commands[index];
-        }
-
-        index++;
+    if (token == NULL) {
+        struct discord_create_message error_reply = { .content = "You must provide a name of a shortcut!" };
+        discord_create_message(client, message->channel_id, &error_reply, NULL);
+        return;
     }
-}
+
+    shortcut_t *shortcut = shortcut_find(token);
+
+    if (shortcut == NULL) {
+        puts("FAIL");
+        struct discord_create_message error_reply = { .content = "That shortcut does not exist!" };
+        discord_create_message(client, message->channel_id, &error_reply, NULL);
+    }
+    else {
+        char text[DISCORD_MAX_MESSAGE_LEN];
+        snprintf(text, sizeof text, "%s", shortcut->content);
+        
+        struct discord_create_message reply = { .content = text };
+        discord_create_message(client, message->channel_id, &reply, NULL); 
+        return;
+    }
+}   

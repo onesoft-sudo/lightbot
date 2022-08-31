@@ -25,6 +25,9 @@
 #include <commands.h>
 #include <json-c/json.h>
 #include <json_config.h>
+#include <errno.h>
+#include <common.h>
+#include <shortcuts.h>
 
 json_object *config;
 
@@ -41,17 +44,16 @@ void on_message_create(struct discord *client, const struct discord_message *mes
     json_object *prefix_object;
 
     if (!json_object_object_get_ex(guild_config, "prefix", &prefix_object)) {
-        puts("error parse");
+        fprintf(stderr, "%s: no prefix specified in the config\n", global_argv[0]);
         exit(-1);
     }
 
     const char *prefix = json_object_get_string(prefix_object);
 
     if (message->content[0] != prefix[0]) {
-        puts("message does not contain prefix");
         return;
     }
-
+    
     if (strcmp(message->content, "-ping") == 0) {
         struct discord_create_message reply = {
                 .content = "Pong!"
@@ -60,26 +62,55 @@ void on_message_create(struct discord *client, const struct discord_message *mes
         discord_create_message(client, message->channel_id, &reply, NULL);
         return;
     }
+
+    if (str_startswith(message->content, "-view")) {
+        puts("here");
+        command_view_shortcut(client, message);
+    }
+}
+
+bool callback(shortcut_t *tmp, int index)
+{
+    if (strcmp(tmp->name, strdup("abc")) == 0) {
+        printf("%s\n", tmp->content);
+        return true;
+    }
+
+    return false;
 }
     
-int main()
+int main(int argc, char const **argv)
 {
     printf("Light Bot!\n");
+    set_global_argv(argv);
 
-    config = json_object_from_file("config/config.json");
+    FILE *config_fp = fopen(CONFIG_FILE_PATH, "r");
 
-    if (config == NULL) {
-        puts("fatal error: failed to read config file");
+    if (!config_fp) {
+        fprintf(stderr, "%s: failed to open file %s: %s\n", argv[0], CONFIG_FILE_PATH, strerror(errno));
+        exit(-1);
+    }
+
+    fclose(config_fp);
+
+    bool success = json_config_init(&config);
+
+    if (!success) {
+        fprintf(stderr, "%s: failed to parse config file; check the JSON syntax.\n", argv[0]);
         exit(-1);
     }
 
     puts(json_object_to_json_string(config));
+
+    shortcut_init();
+    shortcut_loop();
 
     struct discord *client = discord_init(getenv("TOKEN"));
     discord_set_on_ready(client, &on_ready);
     discord_set_on_message_create(client, &on_message_create);
     discord_run(client);
 
+    shortcut_free();
     json_object_put(config);
 
     return 0;

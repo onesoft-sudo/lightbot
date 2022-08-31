@@ -100,7 +100,8 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_light_OBJECTS = light.$(OBJEXT) on_ready_event.$(OBJEXT) \
-	commands.$(OBJEXT) json_config.$(OBJEXT)
+	commands.$(OBJEXT) json_config.$(OBJEXT) common.$(OBJEXT) \
+	shortcuts.$(OBJEXT)
 light_OBJECTS = $(am_light_OBJECTS)
 light_DEPENDENCIES =
 light_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(light_LDFLAGS) \
@@ -120,9 +121,9 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/commands.Po \
+am__depfiles_remade = ./$(DEPDIR)/commands.Po ./$(DEPDIR)/common.Po \
 	./$(DEPDIR)/json_config.Po ./$(DEPDIR)/light.Po \
-	./$(DEPDIR)/on_ready_event.Po
+	./$(DEPDIR)/on_ready_event.Po ./$(DEPDIR)/shortcuts.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -252,7 +253,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-light_SOURCES = light.c on_ready_event.c commands.c json_config.c
+light_SOURCES = light.c on_ready_event.c commands.c json_config.c common.c shortcuts.c
 light_LDFLAGS = -pthread
 light_LDADD = -lpthread -ljson-c -ldiscord -lcurl
 AM_CPPFLAGS = -I$(top_srcdir)/include
@@ -343,9 +344,11 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/commands.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/json_config.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/light.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/on_ready_event.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shortcuts.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -494,9 +497,11 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/commands.Po
+	-rm -f ./$(DEPDIR)/common.Po
 	-rm -f ./$(DEPDIR)/json_config.Po
 	-rm -f ./$(DEPDIR)/light.Po
 	-rm -f ./$(DEPDIR)/on_ready_event.Po
+	-rm -f ./$(DEPDIR)/shortcuts.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -543,9 +548,11 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/commands.Po
+	-rm -f ./$(DEPDIR)/common.Po
 	-rm -f ./$(DEPDIR)/json_config.Po
 	-rm -f ./$(DEPDIR)/light.Po
 	-rm -f ./$(DEPDIR)/on_ready_event.Po
+	-rm -f ./$(DEPDIR)/shortcuts.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

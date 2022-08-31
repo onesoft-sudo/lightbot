@@ -24,12 +24,10 @@
 #include <concord/types.h>
 #include <json_config.h>
 
-#define CONFIG_FILE_PATH "etc/light/config.json"
-
 bool json_config_init(json_object **config) 
 {
     *config = json_object_from_file(CONFIG_FILE_PATH);
-    return *config == NULL;
+    return *config != NULL;
 }
 
 json_object *get_config_by_guild_id(json_object *config, u64snowflake id) 

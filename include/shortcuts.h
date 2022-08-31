@@ -1,5 +1,5 @@
 /*
- commands.h -- declare the commands
+ json_config.h -- declare the config management functions
 
  Copyright (C) 2022 OSN Inc.
 
@@ -16,12 +16,26 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-#ifndef LIGHT_COMMANDS_H
-#define LIGHT_COMMANDS_H
+#ifndef SPARK_CONFIG_H
+#define SPARK_CONFIG_H
 
 #include <stdbool.h>
-#include <concord/discord.h>
 
-void command_view_shortcut(struct discord *, const struct discord_message *);
+#define SHORTCUTS_PATH "/.light/shortcuts.json"
 
-#endif /* LIGHT_COMMANDS_H  */
+typedef struct shortcut
+{
+    char *name;
+    char *content;
+} shortcut_t;
+
+
+void shortcut_init();
+void shortcut_loop();
+void shortcut_free();
+shortcut_t *shortcut_find(char *);
+void shortcut_find_r(bool (*callback)(shortcut_t *, int), shortcut_t **ptr);
+bool shortcut_create(char *, char *, char **);
+
+#endif /* SPARK_CONFIG_H  */
+
