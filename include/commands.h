@@ -23,5 +23,6 @@
 #include <concord/discord.h>
 
 void command_view_shortcut(struct discord *, const struct discord_message *);
+void command_create_shortcut(struct discord *, const struct discord_message *);
 
 #endif /* LIGHT_COMMANDS_H  */

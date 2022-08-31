@@ -35,7 +35,7 @@ void shortcut_loop();
 void shortcut_free();
 shortcut_t *shortcut_find(char *);
 void shortcut_find_r(bool (*callback)(shortcut_t *, int), shortcut_t **ptr);
-bool shortcut_create(char *, char *, char **);
+bool shortcut_create(char *, char *);
 
 #endif /* SPARK_CONFIG_H  */
 

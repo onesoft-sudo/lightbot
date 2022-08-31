@@ -48,7 +48,7 @@ void on_message_create(struct discord *client, const struct discord_message *mes
         exit(-1);
     }
 
-    const char *prefix = json_object_get_string(prefix_object);
+    char *prefix = (char *) json_object_get_string(prefix_object);
 
     if (message->content[0] != prefix[0]) {
         return;
@@ -63,9 +63,13 @@ void on_message_create(struct discord *client, const struct discord_message *mes
         return;
     }
 
-    if (str_startswith(message->content, "-view")) {
-        puts("here");
+    if (str_startswith(message->content, strcat(strdup(prefix), "view"))) {
         command_view_shortcut(client, message);
+    }
+
+    if (str_startswith(message->content, strcat(strdup(prefix), "create"))) {
+        puts("here");
+        command_create_shortcut(client, message);
     }
 }
 

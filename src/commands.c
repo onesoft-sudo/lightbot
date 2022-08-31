@@ -36,7 +36,6 @@ void command_view_shortcut(struct discord *client, const struct discord_message 
     shortcut_t *shortcut = shortcut_find(token);
 
     if (shortcut == NULL) {
-        puts("FAIL");
         struct discord_create_message error_reply = { .content = "That shortcut does not exist!" };
         discord_create_message(client, message->channel_id, &error_reply, NULL);
     }
@@ -49,3 +48,46 @@ void command_view_shortcut(struct discord *client, const struct discord_message 
         return;
     }
 }   
+
+void command_create_shortcut(struct discord *client, const struct discord_message *message)
+{
+    strtok(message->content, " ");
+    char *name = strtok(NULL, " ");
+
+    if (name == NULL) {
+        struct discord_create_message error_reply = { .content = "You must provide a name of the shortcut!" };
+        discord_create_message(client, message->channel_id, &error_reply, NULL);
+        return;
+    }
+
+    if (strlen(name) > 512) {
+        struct discord_create_message error_reply = { .content = "The shortcut name must not have more than 512 characters!" };
+        discord_create_message(client, message->channel_id, &error_reply, NULL);
+        return;
+    }
+
+    char *content = strtok(NULL, " ");
+
+    if (content == NULL) {
+        struct discord_create_message error_reply = { .content = "You must provide the content of the shortcut!" };
+        discord_create_message(client, message->channel_id, &error_reply, NULL);
+        return;
+    }
+
+    if (strlen(name) > DISCORD_MAX_MESSAGE_LEN) {
+        char error_reply_content[1024];
+        snprintf(error_reply_content, sizeof error_reply_content, "The shortcut name must not have more than %d characters!", DISCORD_MAX_MESSAGE_LEN);
+
+        struct discord_create_message error_reply = { .content = error_reply_content };
+        discord_create_message(client, message->channel_id, &error_reply, NULL);
+        return;
+    }
+
+    shortcut_create(name, content);
+
+    char reply_content[1024];
+    snprintf(reply_content, sizeof reply_content, "The shortcut has been created with name `%s`!", name);
+
+    struct discord_create_message reply = { .content = reply_content };
+    discord_create_message(client, message->channel_id, &reply, NULL);
+}

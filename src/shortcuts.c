@@ -8,7 +8,6 @@
 #include <json_config.h>
 #include <string.h>
 
-struct shortcut **shortcuts = NULL;
 json_object *shortcut_json;
 size_t length = 0;
 
@@ -72,7 +71,6 @@ void shortcut_find_r(bool (*callback)(shortcut_t *, int), shortcut_t **ptr)
 void shortcut_free()
 {
     json_object_put(shortcut_json);
-    free(shortcuts);
 }
 
 void shortcut_loop()
@@ -100,8 +98,27 @@ shortcut_t *shortcut_find(char *name)
     return tmp;
 }
 
-bool shortcut_create(char *name, char *content, char **aliases)
+bool shortcut_create(char *name, char *content)
 {
     if (name == NULL || content == NULL) 
         return false;
+
+    json_object *shortcut = json_object_new_object();
+    json_object *name_obj = json_object_new_string(name);
+    json_object *content_obj = json_object_new_string(content);
+
+    json_object_object_add(shortcut, "name", name_obj);
+    json_object_object_add(shortcut, "content", content_obj);
+
+    json_object_array_add(shortcut_json, shortcut);
+
+    char *filepath = malloc((strlen(getenv("HOME")) + strlen(SHORTCUTS_PATH)) * sizeof (char));
+    sprintf(filepath, "%s%s", strdup(getenv("HOME")), SHORTCUTS_PATH);
+
+    json_object_to_file(filepath, shortcut_json);
+
+    free(filepath);
+    length++;
+
+    return true;
 }
