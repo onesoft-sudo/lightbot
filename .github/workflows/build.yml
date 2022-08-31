@@ -9,10 +9,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: concord
+      run: git clone https://github.com/Cogmasters/concord && cd concord && PREFIX=$HOME/.concord make && PREFIX=$HOME/.concord make install
     - name: configure
       run: chmod 755 ./configure && ./configure
     - name: make
-      run: make
+      run: LDFLAFS=-L${HOME}/.concord/usr/local/lib CXXFLAGS=-I${HOME}/.concord/usr/local/include make
     - name: make check
       run: make check
     - name: make distcheck
