@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Curl
-      run: sudo apt install curl libcurl libcurl-dev || apt install curl libcurl libcurl-dev
+      run: sudo apt-get install curl libcurl4-openssl-dev
     - name: concord
       run: git clone https://github.com/Cogmasters/concord && cd concord && PREFIX=$HOME/.concord make && PREFIX=$HOME/.concord make install
     - name: configure
