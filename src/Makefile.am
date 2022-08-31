@@ -1,8 +1,8 @@
-include_HEADERS = commands.h \
-                  common.h \
-                  json_config.h \
-                  on_ready_event.h \
-                  shortcuts.h
+include_HEADERS = ../include/commands.h \
+                  ../include/common.h \
+                  ../include/json_config.h \
+                  ../include/on_ready_event.h \
+                  ../include/shortcuts.h
 
 bin_PROGRAMS = light
 light_SOURCES = light.c \
