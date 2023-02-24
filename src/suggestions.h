@@ -7,4 +7,7 @@
 
 #define SUGGESTIONS_FILE_PATH getenv("SUGGESTIONS_FILE")
 
+void suggestions_init();
+bool suggestions_create(u64snowflake user_id, char *content);
+
 #endif

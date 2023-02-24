@@ -14,7 +14,7 @@ void suggestions_init() {
     root = json_object_from_file(SUGGESTIONS_FILE_PATH == NULL ? "config/suggestions.json" : SUGGESTIONS_FILE_PATH);
 }
 
-bool create_suggestion(u64snowflake user_id, char *content) {
+bool suggestions_create(u64snowflake user_id, char *content) {
     json_object *suggestions = json_object_new_object();
     char user_id_buff[256];
 

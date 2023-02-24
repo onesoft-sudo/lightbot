@@ -5,7 +5,7 @@
 #include "suggestions.h"
 
 void command_suggest(struct discord *client, struct discord_message *event) {
-    create_suggestion(event->author->id, event->content);
+    suggestions_create(event->author->id, event->content);
 
     struct discord_create_message params = {
         .content = "Added suggestion"
