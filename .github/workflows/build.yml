@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Dependencies
-      run: sudo apt-get install curl libcurl4-openssl-dev libjson-c-dev cmake
+      run: sudo apt-get install curl libcurl4-openssl-dev libjson-c-dev cmake build-essential autoconf automake -y
     - name: Install concord
       run: git clone https://github.com/Cogmasters/concord && cd concord && make && sudo make install && cd ..
     - name: Install json-c
