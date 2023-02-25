@@ -6,9 +6,28 @@
 #include <json-c/json.h>
 #include "commands.h"
 #include "events.h"
+#include "config.h"
+#include "suggestions.h"
 
 #define BOT_TOKEN getenv("BOT_TOKEN")
-#define CONFIG_FILE_PATH getenv("CONFIG_FILE")
+
+struct discord *client;
+json_object *config_root;
+
+void set_command_handlers() {
+    discord_set_on_command(client, "setstatus", &command_setstatus);
+    discord_set_on_command(client, "status", &command_setstatus);
+}
+
+void set_event_handlers() {
+    discord_set_on_ready(client, &on_ready);
+    discord_set_on_message_create(client, &on_message);
+}
+
+void configure_client() {
+    discord_add_intents(client, DISCORD_GATEWAY_MESSAGE_CONTENT);
+    discord_set_prefix(client, json_object_get_string(json_object_object_get(config_root, "prefix")));
+}
 
 int main(int argc, char const **argv) {
     if (BOT_TOKEN == NULL) {
@@ -16,23 +35,15 @@ int main(int argc, char const **argv) {
         return -1;
     }
 
-    json_object *config_root = json_object_from_file(CONFIG_FILE_PATH == NULL ? "config/config.json" : CONFIG_FILE_PATH);
-
-    if (!config_root) {
-        log_error("Could not open the config file. Please make sure the config file exists.");
-        return -1;
-    }
-
+    config_init();
     suggestions_init();
     
-    struct discord *client = discord_init(BOT_TOKEN);
+    client = discord_init(BOT_TOKEN);
+    config_root = config_get();
 
-    discord_add_intents(client, DISCORD_GATEWAY_MESSAGE_CONTENT);
-    discord_set_on_ready(client, &on_ready);
-    discord_set_on_message_create(client, &on_message);
-
-    discord_set_prefix(client, json_object_get_string(json_object_object_get(config_root, "prefix")));
-    discord_set_on_command(client, "suggest", &command_suggest);
+    configure_client();
+    set_event_handlers();
+    set_command_handlers();
 
     discord_run(client);
     discord_cleanup(client);

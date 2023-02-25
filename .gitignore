@@ -4,3 +4,4 @@ json-c/
 json-c-build/
 *.o
 main
+tmp
