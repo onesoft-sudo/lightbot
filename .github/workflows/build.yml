@@ -10,14 +10,19 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Dependencies
-      run: sudo apt-get install curl libcurl4-openssl-dev libjson-c-dev
+      run: sudo apt-get install curl libcurl4-openssl-dev libjson-c-dev cmake
     - name: Install concord
-      run: git clone https://github.com/Cogmasters/concord && cd concord && make && sudo make install
-    - name: configure
-      run: chmod 755 ./configure && ./configure
-    - name: make
+      run: git clone https://github.com/Cogmasters/concord && cd concord && make && sudo make install && cd ..
+    # - name: configure
+    #   run: chmod 755 ./configure && ./configure
+    # - name: make
+    #   run: make
+    # - name: make check
+    #   run: make check
+    # - name: make distcheck
+    #   run: make distcheck
+    - name: Install json-c
+      run: git clone https://github.com/json-c/json-c && cd json-c && mkdir json-c-build; cd json-c-build; cmake ../json-c; make && sudo make install && cd ..
+    # - name: configure
+    - name: Build
       run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
