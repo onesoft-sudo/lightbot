@@ -22,7 +22,7 @@ jobs:
     # - name: make distcheck
     #   run: make distcheck
     - name: Install json-c
-      run: git clone https://github.com/json-c/json-c && cd json-c && mkdir json-c-build; cd json-c-build; cmake ../json-c; make && sudo make install && cd ..
+      run: git clone https://github.com/json-c/json-c && cd json-c && mkdir json-c-build; cd json-c-build; cmake ..; make && sudo make install && cd ../..
     # - name: configure
     - name: Build
       run: make
