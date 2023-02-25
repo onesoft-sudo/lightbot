@@ -5,3 +5,6 @@ json-c-build/
 *.o
 main
 tmp
+autom4te.cache/
+Makefile.tmp
+*~
