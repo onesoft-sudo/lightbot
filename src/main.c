@@ -12,7 +12,7 @@
 #define BOT_TOKEN getenv("BOT_TOKEN")
 
 struct discord *client;
-json_object *config_root;
+json_object *config;
 
 void set_command_handlers() {
     discord_set_on_command(client, "setstatus", &command_setstatus);
@@ -26,7 +26,7 @@ void set_event_handlers() {
 
 void configure_client() {
     discord_add_intents(client, DISCORD_GATEWAY_MESSAGE_CONTENT);
-    discord_set_prefix(client, json_object_get_string(json_object_object_get(config_root, "prefix")));
+    discord_set_prefix(client, json_object_get_string(json_object_object_get(config, "prefix")));
 }
 
 int main(int argc, char const **argv) {
@@ -39,7 +39,7 @@ int main(int argc, char const **argv) {
     suggestions_init();
     
     client = discord_init(BOT_TOKEN);
-    config_root = config_get();
+    config = config_get();
 
     configure_client();
     set_event_handlers();
