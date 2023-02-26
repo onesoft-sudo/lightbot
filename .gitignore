@@ -17,3 +17,4 @@ config.status
 build-aux
 *.log
 *.m4
+src/light
