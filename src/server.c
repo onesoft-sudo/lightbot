@@ -84,7 +84,7 @@ void server_init() {
     server_addr_in.sin_port = htons(port);
     server_addr_in.sin_addr.s_addr = INADDR_ANY;
 
-    /* Bind the socket adresss. */
+    /* Bind the socket address. */
     if (bind(sockfd, (struct sockaddr *) &server_addr_in, sizeof server_addr_in) != 0) {
         log_error("cannot bind address on port %d: %s\n", port, server_error());
         exit(EXIT_FAILURE);
