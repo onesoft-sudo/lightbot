@@ -32,6 +32,10 @@
 static int port = 4000, sockfd;
 static char method[256], uri[CHAR_MAX], host[CHAR_MAX];
 
+char *server_error() {
+    return strerror(errno);
+}
+
 void server_set_port(int _port) {
     port = _port;
 }
@@ -47,12 +51,12 @@ void server_init() {
     setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof (int));
 
     if (sockfd == -1) {
-        log_error("cannot open socket: %s\n", strerror(errno));
+        log_error("cannot open socket: %s\n", server_error());
         exit(EXIT_FAILURE);
     }
 
     if (signal(SIGINT, &server_safe_exit) != 0) {
-        log_error("cannot set SIGINT signal handler: %s\n", strerror(errno));
+        log_error("cannot set SIGINT signal handler: %s\n", server_error());
         exit(EXIT_FAILURE);
     }
 
@@ -63,12 +67,12 @@ void server_init() {
     address_in.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(sockfd, (struct sockaddr *) &address_in, sizeof address_in) != 0) {
-        log_error("cannot bind address on port %d: %s\n", port, strerror(errno));
+        log_error("cannot bind address on port %d: %s\n", port, server_error());
         exit(EXIT_FAILURE);
     }
 
     if (listen(sockfd, 5) != 0) {
-        log_error("failed to listen on port %d: %s\n", port, strerror(errno));
+        log_error("failed to listen on port %d: %s\n", port, server_error());
         exit(EXIT_FAILURE);
     }
 
@@ -80,7 +84,7 @@ void server_init() {
         int connfd = accept(sockfd, (struct sockaddr *) &client_address, &len);
 
         if (connfd == -1) {
-            log_error("failed to receive connection: %s\n", strerror(errno));
+            log_error("failed to receive connection: %s\n", server_error());
             exit(EXIT_FAILURE);
         }
 
@@ -117,7 +121,7 @@ static void server_response(int connfd) {
     FILE *conn = fdopen(connfd, "a+");
     
     if (!conn) {
-        log_error("failed to open incoming connection socket: %s\n", strerror(errno));
+        log_error("failed to open incoming connection socket: %s\n", server_error());
         exit(EXIT_FAILURE);
     }
 
