@@ -18,17 +18,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <concord/log.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <errno.h>
 #include <unistd.h>
 #include <limits.h>
 #include <signal.h>
-#include <sys/sysinfo.h>
 #include <math.h>
 #include <time.h>
+#include <concord/log.h>
+#include <netinet/in.h>
+#include <sys/sysinfo.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 #include "server.h"
 #include "../config.h"
@@ -57,6 +57,7 @@ void server_set_port(int _port) {
 /* In case if we receive SIGINT signal, instead of directly exiting, close 
    the server socket first and then exit. */
 static void server_safe_exit() {
+    log_warn("forced exit by user");
     close(sockfd);
     exit(-1);
 }
@@ -185,7 +186,7 @@ void server_init() {
         exit(EXIT_FAILURE);
     }
 
-    log_info("server listening on port %d\n", port);
+    log_info("server listening on port %d", port);
 
     /* This is used to store client information. */
     struct sockaddr_in client_addr;

@@ -27,7 +27,7 @@
 #include "suggestions.h"
 
 void on_ready(struct discord *client, const struct discord_ready *event) {
-    log_info("Logged in as %s!", event->user->username);
+    log_info("logged into discord as %s!", event->user->username);
 }
 
 void on_message(struct discord *client, const struct discord_message *event) {
@@ -73,7 +73,7 @@ void on_message(struct discord *client, const struct discord_message *event) {
         char embed_json[DISCORD_MAX_MESSAGE_LEN + strlen(fmt)];
         char message_content_escaped[sizeof (embed_json) * 2];
 
-        utils_escape_quotes(event->content, &message_content_escaped);
+        utils_escape_quotes(event->content, message_content_escaped);
 
         sprintf(embed_json, fmt, event->author->username,
                 event->author->discriminator, event->author->id,
