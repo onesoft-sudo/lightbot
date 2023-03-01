@@ -22,6 +22,5 @@
 
 void server_set_port(int _port);
 void server_init();
-static void server_response(int connfd);
 
 #endif
