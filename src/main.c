@@ -22,11 +22,16 @@
 #include <string.h>
 #include <json-c/json.h>
 #include <getopt.h>
+#include <pthread.h>
+
 #include "commands.h"
 #include "events.h"
 #include "config.h"
 #include "suggestions.h"
-#include "../include/ac_config.h"
+#include "common.h"
+#include "server.h"
+
+#include "../config.h"
 
 #define BOT_TOKEN getenv("BOT_TOKEN")
 
@@ -62,6 +67,7 @@ A Discord Suggestion Management bot written in C.\n\
 \n\
 Options:\n\
   -h, --help                 Show this help and exit.\n\
+  -p, --port=[PORT]          Specify the HTTP server port.\n\
   -t, --token=[TOKEN]        Specify a bot token manually.\n\
   -v, --version              Show version information.\n\
 \n\
@@ -69,6 +75,16 @@ LightBot support email: <support@onesoftnet.eu.org>\n\
 Discord Server (this server is not owned by OSN, it's for\n\
 support cases or informal discussion about everything): <https://discord.gg/tesworld>\
 \n", argv_0);
+}
+
+void *server_routine() {
+    server_init();
+    return NULL;
+}
+
+void *concord_routine() {
+    discord_run(client);
+    return NULL;
 }
 
 int main(int argc, char **argv) {
@@ -79,11 +95,13 @@ int main(int argc, char **argv) {
             {"help", no_argument, 0, 'h'},
             {"version", no_argument, 0, 'v'},
             {"token", required_argument, 0, 't'},
+            {"port", required_argument, 0, 'p'},
             {0, 0, 0, 0}
         };
 
         int option_index = 0;
-        int c = getopt_long(argc, argv, "hvt:", long_options, &option_index);
+        int c = getopt_long(argc, argv, "hvt:p:", long_options, &option_index);
+        int port_parsed;
 
         if (c == -1) {
             break;
@@ -100,6 +118,17 @@ int main(int argc, char **argv) {
 
             case 't':
                 bot_token = strdup(optarg);
+            break;
+
+            case 'p':
+                port_parsed = atoi(optarg);
+
+                if (!port_parsed) {
+                    log_error("Invalid port specified.");
+                    exit(EXIT_FAILURE);
+                }
+
+                server_set_port(port_parsed);
             break;
 
             case '?':
@@ -127,7 +156,13 @@ int main(int argc, char **argv) {
     set_event_handlers();
     set_command_handlers();
 
-    discord_run(client);
+    pthread_t server_thread, concord_thread;
+
+    pthread_create(&server_thread, NULL, &server_routine, NULL);
+    pthread_create(&concord_thread, NULL, &concord_routine, NULL);
+    pthread_join(server_thread, NULL);
+    pthread_join(concord_thread, NULL);
+
     discord_cleanup(client);
 
     return 0;

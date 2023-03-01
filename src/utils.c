@@ -21,10 +21,12 @@
 #include <concord/discord.h>
 #include <concord/log.h>
 #include <string.h>
-#include "utils.h"
-#include "suggestions.h"
 #include <ctype.h>
 #include <assert.h>
+
+#include "common.h"
+#include "utils.h"
+#include "suggestions.h"
 
 void utils_escape_quotes(char *str, char *dest) {
     int j = 0;

@@ -5,7 +5,7 @@ AC_PREREQ([2.69])
 AC_INIT([lightbot], [0.0.1], [support@onesoftnet.eu.org])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/commands.c])
-AC_CONFIG_HEADERS([include/ac_config.h])
+AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([-Wall])
 AM_SILENT_RULES([yes])
 

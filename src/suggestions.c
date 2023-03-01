@@ -24,8 +24,10 @@
 #include <string.h>
 #include <json-c/json.h>
 #include <uuid/uuid.h>
+
 #include "suggestions.h"
 #include "utils.h"
+#include "common.h"
 
 json_object *root;
 

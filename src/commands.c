@@ -22,10 +22,11 @@
 #include <concord/discord.h>
 #include <concord/log.h>
 #include <string.h>
+
 #include "suggestions.h"
 #include "commands.h"
 #include "config.h"
-#include "suggestions.h"
+#include "common.h"
 
 void command_setstatus(struct discord *client, const struct discord_message *event) {
     if (strlen(event->content) == 0) {

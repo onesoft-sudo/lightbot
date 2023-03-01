@@ -18,3 +18,5 @@ build-aux
 *.log
 *.m4
 src/light
+config.h
+config.h.in
