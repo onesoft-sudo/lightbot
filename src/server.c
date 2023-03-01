@@ -29,24 +29,43 @@
 
 #include "server.h"
 
-static int port = 4000, sockfd;
+/* The server port, stored here for accessing from anywhere in this file. */
+static int port = 4000;
+
+/* The server socket, initialized by server_init(). */
+static int sockfd;
+
+/* These variables store method, request URI and hostname from the 
+   incoming HTTP request. */
 static char method[256], uri[CHAR_MAX], host[CHAR_MAX];
 
+/* Return the appropriate error message depending on the value of `errno`. */
 char *server_error() {
     return strerror(errno);
 }
 
+/* Set the server port. This function is used everywhere to set the port
+   instead of directly modifying the port variable. */
 void server_set_port(int _port) {
     port = _port;
 }
 
+/* In case if we receive SIGINT signal, instead of directly exiting, close 
+   the server socket first and then exit. */
 static void server_safe_exit() {
     close(sockfd);
     exit(-1);
 }
 
+/* Initialize the server.
+   Create the server socket, bind address and listen to the incoming requests. */
 void server_init() {
+    /* This is a temporary unused variable to store the value set by setsockopt(). */
     int tmp = 1;
+
+    /* Store the server address information to bind the port and listen for requests. */
+    struct sockaddr_in server_addr_in;
+
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof (int));
 
@@ -60,17 +79,18 @@ void server_init() {
         exit(EXIT_FAILURE);
     }
 
-    struct sockaddr_in address_in, client_address;
+    /* Set the information about the server socket address. */
+    server_addr_in.sin_family = AF_INET;
+    server_addr_in.sin_port = htons(port);
+    server_addr_in.sin_addr.s_addr = INADDR_ANY;
 
-    address_in.sin_family = AF_INET;
-    address_in.sin_port = htons(port);
-    address_in.sin_addr.s_addr = INADDR_ANY;
-
-    if (bind(sockfd, (struct sockaddr *) &address_in, sizeof address_in) != 0) {
+    /* Bind the socket adresss. */
+    if (bind(sockfd, (struct sockaddr *) &server_addr_in, sizeof server_addr_in) != 0) {
         log_error("cannot bind address on port %d: %s\n", port, server_error());
         exit(EXIT_FAILURE);
     }
 
+    /* Listen to the given port. */
     if (listen(sockfd, 5) != 0) {
         log_error("failed to listen on port %d: %s\n", port, server_error());
         exit(EXIT_FAILURE);
@@ -78,10 +98,15 @@ void server_init() {
 
     log_info("server listening on port %d\n", port);
 
-    socklen_t len = sizeof client_address;
+    /* This is used to store client information. */
+    struct sockaddr_in client_addr;
 
+    /* Size of the `client_addr` struct. */
+    socklen_t len = sizeof client_addr;
+
+    /* Loop infinitely and keep accepting incoming requests. */
     for (;;) {
-        int connfd = accept(sockfd, (struct sockaddr *) &client_address, &len);
+        int connfd = accept(sockfd, (struct sockaddr *) &client_addr, &len);
 
         if (connfd == -1) {
             log_error("failed to receive connection: %s\n", server_error());
@@ -94,21 +119,26 @@ void server_init() {
     close(sockfd);
 }
 
+/* Write the common headers that needs to be sent with every response. */
 static void server_response_set_headers(FILE *conn) {   
     fprintf(conn, "Connection: Close\n");
     fprintf(conn, "Server: " SERVER_NAME "\n");
     fprintf(conn, "Host: %s\n", host);
 }
 
+/* Write the default content type header and content length header. Default content
+   type is application/json. */
 static void server_response_set_default_content_type_length(FILE *conn, int len) {   
     fprintf(conn, "Content-Type: application/json; charset='utf-8'\n");
     fprintf(conn, "Content-Length: %d\n", len);
 }
 
+/* Write the response status code and status text. */
 static void server_response_set_code(FILE *conn, int status, char *statusText) {
     fprintf(conn, "HTTP/1.1 %d %s\n", status, statusText == NULL ? "" : statusText);
 }
 
+/* A shorthand for sending a simple string response with all the default settings. */
 static void server_response_send(FILE *conn, int status, char *statusText, char *response) {
     server_response_set_code(conn, status, statusText);
     server_response_set_headers(conn);
@@ -117,7 +147,10 @@ static void server_response_send(FILE *conn, int status, char *statusText, char 
     log_info("%s %s - %d %s", method, uri, status, statusText == NULL ? "" : statusText);
 }
 
+/* Handle the incoming request and send a response back. In most cases, the server
+   will send JSON responses. */
 static void server_response(int connfd) {
+    /* Open the incoming socket file descriptor (client socket). */
     FILE *conn = fdopen(connfd, "a+");
     
     if (!conn) {
@@ -125,9 +158,11 @@ static void server_response(int connfd) {
         exit(EXIT_FAILURE);
     }
 
+    /* Scan the HTTP method, request URI and hostname from the socket connection. */
     fscanf(conn, "%s %s HTTP/1.1\n", method, uri);
     fscanf(conn, "Host: %s\n", host);
 
+    /* For now, handle the root URI (/) only. In every other case, return 404. */
     if (strcmp(uri, "/") != 0) {
         server_response_send(conn, 404, "Not Found", "{\"error\": \"Not found\"}");
     }
@@ -135,5 +170,6 @@ static void server_response(int connfd) {
         server_response_send(conn, 200, "OK", "{\"message\": \"API server is up.\"}");
     }
 
+    /* Close the connection. */
     fclose(conn);
 }
