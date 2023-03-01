@@ -15,5 +15,7 @@ jobs:
       run: git clone https://github.com/Cogmasters/concord && cd concord && make && sudo make install && cd ..
     - name: Install json-c
       run: git clone https://github.com/json-c/json-c && cd json-c && mkdir json-c-build; cd json-c-build; cmake ..; make && sudo make install && cd ../..
+    - name: Run autoreconf
+      run: autoreconf -i
     - name: Build
       run: ./configure; make; sudo make install; make distcheck
