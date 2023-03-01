@@ -10,11 +10,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Dependencies
-      run: sudo apt update && sudo apt install curl libcurl4-openssl-dev libjson-c-dev cmake build-essential autoconf automake -y
+      run: sudo apt update && sudo apt install curl libcurl4-openssl-dev libjson-c-dev cmake build-essential autoconf automake libjson-c-dev -y
     - name: Install concord
       run: git clone https://github.com/Cogmasters/concord && cd concord && make && sudo make install && cd ..
     - name: Install json-c
-      run: git clone https://github.com/json-c/json-c && cd json-c && mkdir json-c-build; cd json-c-build; cmake ..; make && sudo make install && cd ../..
+      run: sudo apt install 
     - name: Run autoreconf
       run: autoreconf -i
     - name: Build
