@@ -16,10 +16,7 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <concord/discord_codecs.h>
-#include <concord/error.h>
-#include <concord/types.h>
-#include <json-c/json_object.h>
-#include <json-c/json_types.h>
+#include <json-c/json.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -126,14 +123,40 @@ void command_setstatus(struct discord *client, const struct discord_message *eve
     discord_edit_message(client, msgs.array[0].channel_id, msgs.array[0].id, &edit_params, NULL);
     discord_messages_cleanup(&msgs);
 
-    printf("ID: %s\n", id);
-
     json_object *suggestion = suggestions_get(id);
 
     if (suggestion == NULL) {
         struct discord_create_message params = { .content = ":x: No such suggestion found." };
         discord_create_message(client, event->channel_id, &params, NULL);
         return;
+    }
+
+    if (status == SUGGESTION_ACCEPTED) {
+        struct discord_channel dm_channel = {0};
+        struct discord_ret_channel ret_channel = {.sync = &dm_channel};
+        struct discord_create_dm params = { .recipient_id = json_object_get_int64(json_object_object_get(suggestion, "user_id")) };
+
+        u64snowflake dm_channel_id;
+
+        if (CCORD_OK == discord_create_dm(client, &params, &ret_channel)) {
+            dm_channel_id = dm_channel.id;
+            discord_channel_cleanup(&dm_channel);
+        }
+
+        struct discord_guild guild = { 0 };
+        struct discord_ret_guild guild_ret = { .sync = &guild };
+
+        discord_get_guild(client, event->guild_id, &guild_ret);
+
+        char dm_content[1024];
+
+        sprintf(dm_content, "**Your suggestion was accepted in %s**\nSuggestion ID: `%s`", guild.name, id);
+
+        struct discord_ret_message ret_message = {.sync = DISCORD_SYNC_FLAG};
+        struct discord_create_message dm_params = { .content = dm_content };
+
+        discord_create_message(client, dm_channel_id, &dm_params, &ret_message);
+        discord_guild_cleanup(&guild);
     }
 
     json_object_object_add(suggestion, "status", json_object_new_int(status));
