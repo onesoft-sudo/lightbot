@@ -29,7 +29,7 @@ enum suggestion_status {
     SUGGESTION_PENDING,
     SUGGESTION_IMPLEMENTED,
     SUGGESTION_ACCEPTED,
-    SUGGESTION_REJECTED,
+    SUGGESTION_DENIED,
     SUGGESTION_ALREADY_SUGGESTED,
     SUGGESTION_ALREADY_IMPLEMENTED,
     SUGGESTION_INCOMPLETE,
@@ -44,5 +44,6 @@ const char *suggestions_status_stringify_description(enum suggestion_status stat
 json_object *suggestions_get(char *id);
 enum suggestion_status utils_status_from_string(char *str);
 bool suggestions_save();
+int suggestions_status_color(enum suggestion_status status);
 
 #endif /* __SUGGESTIONS_H__  */

@@ -23,7 +23,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <json-c/json.h>
-#include <uuid/uuid.h>
 
 #include "suggestions.h"
 #include "utils.h"
@@ -58,11 +57,42 @@ const char *suggestions_status_stringify(enum suggestion_status status) {
         case SUGGESTION_INVALID:
             return "Invalid";
           
-        case SUGGESTION_REJECTED:
-            return "Rejected";
+        case SUGGESTION_DENIED:
+            return "Denied";
           
         default:
             return "Unknown";
+    }
+}
+
+int suggestions_status_color(enum suggestion_status status) {
+    switch (status) {
+        case SUGGESTION_PENDING:
+            return 0x007bff;
+          
+        case SUGGESTION_ACCEPTED:
+            return 0x00ff4c;
+            
+        case SUGGESTION_ALREADY_IMPLEMENTED:
+            return 0xf14a60;
+          
+        case SUGGESTION_ALREADY_SUGGESTED:
+            return 0xf14a60;
+          
+        case SUGGESTION_IMPLEMENTED:
+            return 0x03cffc;
+          
+        case SUGGESTION_INCOMPLETE:
+            return 0xf14a60;
+          
+        case SUGGESTION_INVALID:
+            return 0xfcca03;
+          
+        case SUGGESTION_DENIED:
+            return 0xf14a60;
+          
+        default:
+            return 0x000000;
     }
 }
 
@@ -74,13 +104,13 @@ const char *suggestions_status_stringify_description(enum suggestion_status stat
         case SUGGESTION_ACCEPTED:
             return "This suggestion was accepted";
             
-        case SUGGESTION_ALREADY_IMPLEMENTED:
+        case SUGGESTION_IMPLEMENTED:
             return "This suggestion was implemented";
           
         case SUGGESTION_ALREADY_SUGGESTED:
             return "This was already suggested";
           
-        case SUGGESTION_IMPLEMENTED:
+        case SUGGESTION_ALREADY_IMPLEMENTED:
             return "This was already implemented";
           
         case SUGGESTION_INCOMPLETE:
@@ -89,8 +119,8 @@ const char *suggestions_status_stringify_description(enum suggestion_status stat
         case SUGGESTION_INVALID:
             return "This suggestion is invalid";
           
-        case SUGGESTION_REJECTED:
-            return "This suggestion was rejected";
+        case SUGGESTION_DENIED:
+            return "This suggestion was denied";
           
         default:
             return "Unknown";
@@ -150,11 +180,11 @@ enum suggestion_status utils_status_from_string(char *str) {
     else if (strcmp(lower, "accepted") == 0) {
         return SUGGESTION_ACCEPTED;
     }
-    else if (strcmp(lower, "implemnted") == 0) {
+    else if (strcmp(lower, "implemented") == 0) {
         return SUGGESTION_IMPLEMENTED;
     }
-    else if (strcmp(lower, "rejected") == 0) {
-        return SUGGESTION_REJECTED;
+    else if (strcmp(lower, "denied") == 0 || strcmp(lower, "rejected") == 0) {
+        return SUGGESTION_DENIED;
     }
     else if (strcmp(lower, "invalid") == 0) {
         return SUGGESTION_INVALID;
@@ -162,10 +192,10 @@ enum suggestion_status utils_status_from_string(char *str) {
     else if (strcmp(lower, "incomplete") == 0) {
         return SUGGESTION_INCOMPLETE;
     }
-    else if (strcmp(lower, "alreadysuggested") == 0 || strcmp(lower, "already_suggested") == 0 || strcmp(lower, "suggested") == 0) {
+    else if (strcmp(lower, "alreadysuggested") == 0 || strcmp(lower, "already-suggested") == 0 || strcmp(lower, "already_suggested") == 0 || strcmp(lower, "suggested_already") == 0) {
         return SUGGESTION_ALREADY_SUGGESTED;
     }
-    else if (strcmp(lower, "alreadyimplemented") == 0 || strcmp(lower, "already_implemented") == 0 || strcmp(lower, "implemented") == 0) {
+    else if (strcmp(lower, "alreadyimplemented") == 0 || strcmp(lower, "already-implemented") == 0 || strcmp(lower, "already_implemented") == 0 || strcmp(lower, "implemented_already") == 0) {
         return SUGGESTION_ALREADY_IMPLEMENTED;
     }
     else {

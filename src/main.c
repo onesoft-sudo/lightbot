@@ -40,7 +40,9 @@ json_object *config;
 
 static void set_command_handlers() {
     discord_set_on_command(client, "setstatus", &command_setstatus);
-    discord_set_on_command(client, "status", &command_setstatus);
+    discord_set_on_command(client, "status", &command_status);
+    discord_set_on_command(client, "showstatus", &command_showstatus);
+    discord_set_on_command(client, "viewstatus", &command_showstatus);
 }
 
 static void set_event_handlers() {
