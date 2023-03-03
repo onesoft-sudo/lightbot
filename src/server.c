@@ -29,8 +29,9 @@
 #include <sys/sysinfo.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <pthread.h>
 
-#include "server.h"
+#include "server.h" /* MAX_THREADS */
 #include "../config.h"
 
 /* The server port, stored here for accessing from anywhere in this file. */
@@ -43,9 +44,21 @@ static int sockfd;
    incoming HTTP request. */
 static char method[256], uri[CHAR_MAX], host[CHAR_MAX];
 
+/* Threads for handing incoming requests in parallel. */
+static pthread_t threads[MAX_THREADS];
+
+/* Total threads count. */
+static size_t thread_count = 0;
+
 /* Return the appropriate error message depending on the value of `errno`. */
 char *server_error() {
     return strerror(errno);
+}
+
+/* Since `thread_count` is static, it cannot be accessed outside of this file.
+   This function allows to access the variable outside of this file. */
+size_t server_thread_count() {
+    return thread_count;
 }
 
 /* Set the server port. This function is used everywhere to set the port
@@ -54,12 +67,17 @@ void server_set_port(int _port) {
     port = _port;
 }
 
-/* In case if we receive SIGINT signal, instead of directly exiting, close 
-   the server socket first and then exit. */
+/* Close the server socket and exit. */
 static void server_safe_exit() {
-    log_warn("forced exit by user");
     close(sockfd);
     exit(-1);
+}
+
+/* In case if we receive SIGINT signal, instead of directly exiting, close 
+   the server socket first and then exit. */
+static void server_safe_exit_sigint() {
+    log_warn("force exit by user");
+    server_safe_exit();
 }
 
 /* Write the common headers that needs to be sent with every response. */
@@ -147,6 +165,28 @@ static void server_response(int connfd) {
     fclose(conn);
 }
 
+/* The thread routine function for sending the response. */
+static void *server_response_routine(void* arg) {
+    int connfd = *((int *) arg);
+    server_response(connfd);
+    thread_count--;
+    return NULL;
+}
+
+/* Creates a new thread for the incoming request. Also checks if the max thread
+   limit is exceeded. */
+static void server_response_thread_create(int connfd) {
+    if (thread_count > MAX_THREADS) {
+        log_error("maximum thread count exceeded: max count is %llu but attempted to create %llu threads", MAX_THREADS, thread_count);
+        server_safe_exit();
+    }
+
+    if (pthread_create(&threads[thread_count++], NULL, &server_response_routine, (void *) &connfd) != 0) {
+        log_error("failed to create thread for incoming request: %s\n", server_error());
+        exit(EXIT_FAILURE);
+    }
+}
+
 /* Initialize the server.
    Create the server socket, bind address and listen to the incoming requests. */
 void server_init() {
@@ -164,7 +204,13 @@ void server_init() {
         exit(EXIT_FAILURE);
     }
 
-    if (signal(SIGINT, &server_safe_exit) != 0) {
+    /* Signal action for handing SIGINT. */
+    struct sigaction action = { 0 };
+
+    action.sa_sigaction = &server_safe_exit_sigint;
+    action.sa_flags = 0;
+
+    if (sigaction(SIGINT, &action, NULL) != 0) {
         log_error("cannot set SIGINT signal handler: %s\n", server_error());
         exit(EXIT_FAILURE);
     }
@@ -203,8 +249,8 @@ void server_init() {
             exit(EXIT_FAILURE);
         }
 
-        server_response(connfd);
+        server_response_thread_create(connfd);
     }
     
-    close(sockfd);
+    close(sockfd); 
 }

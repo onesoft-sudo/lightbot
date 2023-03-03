@@ -18,9 +18,16 @@
 #ifndef __SERVER_H__
 #define __SERVER_H__
 
+#include <stdlib.h>
+
+/* The name of the server. Present in the "Server" header. */
 #define SERVER_NAME "Lightbot"
+
+/* Max threads for handing requests. */
+#define MAX_THREADS 16
 
 void server_set_port(int _port);
 void server_init();
+size_t server_thread_count();
 
-#endif
+#endif /* __SERVER_H__ */
