@@ -15,7 +15,6 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-#include <concord/discord_codecs.h>
 #include <json-c/json.h>
 #include <math.h>
 #include <stdio.h>
