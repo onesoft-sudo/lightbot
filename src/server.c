@@ -81,7 +81,7 @@ static void server_safe_exit_sigint() {
 }
 
 /* Write the common headers that needs to be sent with every response. */
-static void server_response_set_headers(FILE *conn) {   
+static void server_response_set_headers(FILE *restrict conn) {   
     /* Determind the current time in GMT timezone. */
     time_t current_time = time(NULL);
     struct tm *timeinfo = gmtime(&current_time);
@@ -99,18 +99,18 @@ static void server_response_set_headers(FILE *conn) {
 
 /* Write the default content type header and content length header. Default content
    type is application/json. */
-static void server_response_set_default_content_type_length(FILE *conn, int len) {   
+static void server_response_set_default_content_type_length(FILE *restrict conn, int len) {   
     fprintf(conn, "Content-Type: application/json; charset='utf-8'\n");
     fprintf(conn, "Content-Length: %d\n", len);
 }
 
 /* Write the response status code and status text. */
-static void server_response_set_code(FILE *conn, int status, char *statusText) {
+static void server_response_set_code(FILE *restrict conn, int status, char *statusText) {
     fprintf(conn, "HTTP/1.1 %d %s\n", status, statusText == NULL ? "" : statusText);
 }
 
 /* A shorthand for sending a simple string response with all the default settings. */
-static void server_response_send(FILE *conn, int status, char *statusText, char *response) {
+static void server_response_send(FILE *restrict conn, int status, char *statusText, char *response) {
     server_response_set_code(conn, status, statusText);
     server_response_set_headers(conn);
     server_response_set_default_content_type_length(conn, (int) strlen(response));
@@ -166,7 +166,7 @@ static void server_response(int connfd) {
 }
 
 /* The thread routine function for sending the response. */
-static void *server_response_routine(void* arg) {
+static void *server_response_routine(void *arg) {
     int connfd = *((int *) arg);
     server_response(connfd);
     thread_count--;
