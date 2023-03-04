@@ -24,7 +24,7 @@
 #define SERVER_NAME "Lightbot"
 
 /* Max threads for handing requests. */
-#define MAX_THREADS 16
+#define MAX_THREADS 8
 
 void server_set_port(int _port);
 void server_init();
