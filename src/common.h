@@ -18,11 +18,13 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
+#include "../config.h"
+
 #if !defined(__GNUC__) && !defined(__clang__)
 #error Only GNU C compiler and clang is supported.
 #endif
 
-#define LIGHTBOT_GIT_REPO "https://github.com/onesoft-sudo/lightbot"
+#define LIGHTBOT_GIT_REPO PACKAGE_URL
 #define LIGHTBOT_AUTHOR_NAME "Ar Rakin"
 
 #endif /* __COMMON_H__ */
