@@ -12,4 +12,4 @@ void config_init();
 json_object *config_get();
 const char *config_get_string(char *key);
 
-#endif
+#endif /* __CONFIG_H__ */
