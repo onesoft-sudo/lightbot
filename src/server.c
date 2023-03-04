@@ -130,8 +130,8 @@ static void server_response(int connfd) {
     }
 
     /* Scan the HTTP method, request URI and hostname from the socket connection. */
-    fscanf(conn, "%s %s HTTP/1.1\n", method, uri);
-    fscanf(conn, "Host: %s\n", host);
+    (void) fscanf(conn, "%s %s HTTP/1.1\n", method, uri);
+    (void) fscanf(conn, "Host: %s\n", host);
 
     /* For now, handle the root URI (/) only. In every other case, return 404. */
     if (strcmp(uri, "/") != 0) {
