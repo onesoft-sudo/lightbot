@@ -22,4 +22,7 @@
 #error Only GNU C compiler and clang is supported.
 #endif
 
-#endif
+#define LIGHTBOT_GIT_REPO "https://github.com/onesoft-sudo/lightbot"
+#define LIGHTBOT_AUTHOR_NAME "Ar Rakin"
+
+#endif /* __COMMON_H__ */

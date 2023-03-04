@@ -25,5 +25,6 @@
 void command_status(struct discord *client, const struct discord_message *event);
 void command_showstatus(struct discord *client, const struct discord_message *event);
 void command_setstatus(struct discord *client, const struct discord_message *event);
+void command_about(struct discord *client, const struct discord_message *event);
 
 #endif /* __COMMANDS_H__  */

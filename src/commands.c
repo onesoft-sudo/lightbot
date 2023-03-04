@@ -23,11 +23,13 @@
 #include <concord/log.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 
 #include "suggestions.h"
 #include "commands.h"
 #include "config.h"
 #include "common.h"
+#include "../config.h"
 
 static void validate_message_id(struct discord *client, const struct discord_message *event) {
     for (int i = 0; i < strlen(event->content); i++) {
@@ -68,6 +70,7 @@ static void get_suggestion_message(struct discord *client, const struct discord_
 
 /*
 * The `setstatus` command. 
+* Sets or updates the status of a suggestion.
 *
 * Usage: <prefix>setstatus <message_id> <new_status>
 */
@@ -140,22 +143,22 @@ void command_setstatus(struct discord *client, const struct discord_message *eve
         if (CCORD_OK == discord_create_dm(client, &params, &ret_channel)) {
             dm_channel_id = dm_channel.id;
             discord_channel_cleanup(&dm_channel);
+
+            struct discord_guild guild = { 0 };
+            struct discord_ret_guild guild_ret = { .sync = &guild };
+
+            discord_get_guild(client, event->guild_id, &guild_ret);
+
+            char dm_content[1024];
+
+            sprintf(dm_content, "**Your suggestion was accepted in %s**\nSuggestion ID: `%s`", guild.name, id);
+
+            struct discord_ret_message ret_message = {.sync = DISCORD_SYNC_FLAG};
+            struct discord_create_message dm_params = { .content = dm_content };
+
+            discord_create_message(client, dm_channel_id, &dm_params, &ret_message);
+            discord_guild_cleanup(&guild);
         }
-
-        struct discord_guild guild = { 0 };
-        struct discord_ret_guild guild_ret = { .sync = &guild };
-
-        discord_get_guild(client, event->guild_id, &guild_ret);
-
-        char dm_content[1024];
-
-        sprintf(dm_content, "**Your suggestion was accepted in %s**\nSuggestion ID: `%s`", guild.name, id);
-
-        struct discord_ret_message ret_message = {.sync = DISCORD_SYNC_FLAG};
-        struct discord_create_message dm_params = { .content = dm_content };
-
-        discord_create_message(client, dm_channel_id, &dm_params, &ret_message);
-        discord_guild_cleanup(&guild);
     }
 
     json_object_object_add(suggestion, "status", json_object_new_int(status));
@@ -172,6 +175,12 @@ void command_setstatus(struct discord *client, const struct discord_message *eve
     }
 }
 
+/*
+* The `showstatus` command. 
+* Shows status of a suggestion.
+*
+* Usage: <prefix>showstatus <message_id>
+*/
 void command_showstatus(struct discord *client, const struct discord_message *event) {
     if (strlen(event->content) == 0) {
         struct discord_create_message params = { .content = ":x: Please provide the suggestion message ID." };
@@ -230,6 +239,14 @@ void command_showstatus(struct discord *client, const struct discord_message *ev
     discord_messages_cleanup(&msgs);
 }
 
+/*
+* The `status` command. 
+*
+* Usage: <prefix>status <message_id> [new_status]
+*
+* If `new_status` is passed, then it behaves identical to `setstatus`. 
+* Otherwise it will show the status just like `showstatus`.
+*/
 void command_status(struct discord *client, const struct discord_message *event) {
     if (strlen(event->content) == 0) {
         struct discord_create_message params = { .content = ":x: Please provide the suggestion message ID." };
@@ -247,4 +264,55 @@ void command_status(struct discord *client, const struct discord_message *event)
     else {
         command_setstatus(client, event);
     }
+}
+
+/*
+* The `about` command. 
+* Shows information about the bot.
+*
+* Usage: <prefix>about
+*/
+void command_about(struct discord *client, const struct discord_message *event) {
+    struct discord_embed_fields fields = { 0 };
+
+    fields.array = (struct discord_embed_field[]) {
+        { "Version",  VERSION, true },
+        { "Source Code",  "[Click here](" LIGHTBOT_GIT_REPO ")", true },
+        { "Licensed Under",  "[GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html)", true },
+        { "Author", LIGHTBOT_AUTHOR_NAME, true },
+        { "Support", PACKAGE_BUGREPORT, true },
+        { "Written in", "GNU C", true }
+    };
+
+    fields.size = 6;
+    fields.realsize = fields.size;
+
+    struct discord_embed embed = {
+        .author = &(struct discord_embed_author) {
+            .name = PACKAGE_NAME
+        },
+        .description = "**A free and open source Discord Suggestion Management bot, especially created"
+                       " for [The Everything Server](https://discord.gg/tesworld).**\n\n"
+                       "This bot comes with ABSOLUTELY NO WARRANTY.\n"
+                       "This is free software, and you are welcome to redistribute it under certain conditions.\n"
+                       "See the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html)"
+                       " for more detailed information.",
+        .fields = &fields,
+        .color = 0x007bff,
+        .footer = &(struct discord_embed_footer) {
+            .text = "Copyright (C) OSN Inc 2022-2023."
+        }
+    };
+
+    struct discord_embeds embeds = {
+        .array = &embed,
+        .size = 1,
+        .realsize = 1
+    };
+
+    struct discord_create_message params = {
+        .embeds = &embeds
+    };
+
+    discord_create_message(client, event->channel_id, &params, NULL);
 }

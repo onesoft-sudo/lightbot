@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([lightbot], [0.0.1], [support@onesoftnet.eu.org])
+AC_INIT([LightBot], [0.0.1], [support@onesoftnet.eu.org])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/commands.c])
 AC_CONFIG_HEADERS([config.h])
