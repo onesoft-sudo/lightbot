@@ -26,5 +26,6 @@
 
 #define LIGHTBOT_GIT_REPO PACKAGE_URL
 #define LIGHTBOT_AUTHOR_NAME "Ar Rakin"
+#define LIGHTBOT_CONFIG_DIR "lightbot"
 
 #endif /* __COMMON_H__ */

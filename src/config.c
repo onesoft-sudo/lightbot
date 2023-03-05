@@ -20,6 +20,7 @@
 #include <concord/discord.h>
 #include <concord/log.h>
 #include <string.h>
+#include <errno.h>
 #include <json-c/json.h>
 
 #include "config.h"
@@ -27,11 +28,21 @@
 
 json_object *config_root;
 
-void config_init() {
-    config_root = json_object_from_file(CONFIG_FILE_PATH == NULL ? "config/config.json" : CONFIG_FILE_PATH);
+void config_init(char *config_file) {
+    char *config_file_path = config_file != NULL ? config_file : CONFIG_FILE_PATH;
+
+    config_root = json_object_from_file(config_file_path == NULL ? "/usr/local/etc/" LIGHTBOT_CONFIG_DIR "/config.json" : config_file_path);
 
     if (!config_root) {
-        log_error("Could not open the config file. Please make sure the config file exists.");
+        config_root = json_object_from_file(config_file_path == NULL ? "/usr/etc/" LIGHTBOT_CONFIG_DIR "/config.json" : config_file_path);
+    }
+
+    if (!config_root) {
+        config_root = json_object_from_file(config_file_path == NULL ? "/etc/" LIGHTBOT_CONFIG_DIR "/config.json" : config_file_path);
+    }
+
+    if (!config_root) {
+        log_error("could not open the config file: %s", strerror(errno));
         exit(-1);
     }
 }

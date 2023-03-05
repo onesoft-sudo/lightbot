@@ -8,7 +8,7 @@
 
 #define CONFIG_FILE_PATH getenv("CONFIG_FILE")
 
-void config_init();
+void config_init(char *config_file);
 json_object *config_get();
 const char *config_get_string(char *key);
 

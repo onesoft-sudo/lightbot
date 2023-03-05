@@ -15,13 +15,13 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-#include <json-c/json_object.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <concord/discord.h>
 #include <concord/log.h>
 #include <stdbool.h>
 #include <string.h>
+#include <errno.h>
 #include <json-c/json.h>
 
 #include "suggestions.h"
@@ -30,8 +30,23 @@
 
 json_object *root;
 
-void suggestions_init() {
-    root = json_object_from_file(SUGGESTIONS_FILE_PATH == NULL ? "config/suggestions.json" : SUGGESTIONS_FILE_PATH);
+void suggestions_init(char *suggestions_file) {
+    char *suggestions_file_path = suggestions_file != NULL ? suggestions_file : SUGGESTIONS_FILE_PATH;
+    
+    root = json_object_from_file(suggestions_file_path == NULL ? "/usr/local/etc/" LIGHTBOT_CONFIG_DIR "/suggestions.json" : suggestions_file_path);
+
+    if (!root) {
+        root = json_object_from_file(suggestions_file_path == NULL ? "/usr/etc/" LIGHTBOT_CONFIG_DIR "/suggestions.json" : suggestions_file_path);
+    }
+
+    if (!root) {
+        root = json_object_from_file(suggestions_file_path == NULL ? "/etc/" LIGHTBOT_CONFIG_DIR "/suggestions.json" : suggestions_file_path);
+    }
+
+    if (!root) {
+        log_error("Could not open suggestions file: %s", strerror(errno));
+        exit(-1);
+    }
 }
 
 const char *suggestions_status_stringify(enum suggestion_status status) {

@@ -17,12 +17,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <concord/discord.h>
-#include <concord/log.h>
 #include <string.h>
-#include <json-c/json.h>
 #include <getopt.h>
 #include <pthread.h>
+#include <stdbool.h>
+#include <json-c/json.h>
+#include <concord/discord.h>
+#include <concord/log.h>
 
 #include "commands.h"
 #include "events.h"
@@ -91,20 +92,22 @@ void *concord_routine() {
 }
 
 int main(int argc, char **argv) {
-    char *bot_token = NULL;
+    char *bot_token = NULL, *config_file_path = NULL, *suggestions_file_path = NULL;
 
     while (true) {
         const struct option long_options[] = {
+            {"config", required_argument, 0, 'f'},
             {"help", no_argument, 0, 'h'},
             {"version", no_argument, 0, 'v'},
             {"token", required_argument, 0, 't'},
             {"port", required_argument, 0, 'p'},
+            {"suggestions", required_argument, 0, 's'},
             {0, 0, 0, 0}
         };
 
         int option_index = 0;
-        int c = getopt_long(argc, argv, "hvt:p:", long_options, &option_index);
         int port_parsed;
+        int c = getopt_long(argc, argv, "hvt:p:f:s:", long_options, &option_index);
 
         if (c == -1) {
             break;
@@ -134,6 +137,14 @@ int main(int argc, char **argv) {
                 server_set_port(port_parsed);
             break;
 
+            case 'f':
+                config_file_path = strdup(optarg);
+            break;
+
+            case 's':
+                suggestions_file_path = strdup(optarg);
+            break;
+
             case '?':
             default:
                 return -1;
@@ -145,8 +156,8 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    config_init();
-    suggestions_init();
+    config_init(config_file_path);
+    suggestions_init(suggestions_file_path);
     
     if (bot_token == NULL)
         client = discord_init(BOT_TOKEN);

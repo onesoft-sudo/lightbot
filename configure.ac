@@ -17,8 +17,8 @@ AC_PROG_CC
 AC_CHECK_LIB([curl], [curl_init])
 # FIXME: Replace `main' with a function in `-ldiscord':
 AC_CHECK_LIB([discord], [discord_run])
-# FIXME: Replace `main' with a function in `-luuid':
-AC_CHECK_LIB([uuid], [uuid_generate_random])
+# FIXME: Replace `main' with a function in `-ljson-c':
+AC_CHECK_LIB([json-c], [json_object_from_file])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h getopt.h json-c/json_types.h json-c/json_object.h json-c/json.h concord/discord.h concord/types.h concord/log.h])
