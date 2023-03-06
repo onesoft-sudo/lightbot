@@ -1,0 +1,50 @@
+@chapter Configuring LightBot
+
+All the configuration files of LightBot is stored under the @code{/etc/light}, @code{/usr/etc/light} or @code{/usr/local/etc/light} directories by default.
+
+There are 2 files in the configuration directory:
+
+@itemize @bullet
+@item @code{config.json}
+@item @code{suggestions.json}
+@end itemize
+
+@section Understanding and setting up the @code{config.json} file
+
+The @code{config.json} file should look something like this:
+
+@example
+@{
+    "prefix": "!",
+    "channel": ""
+@}
+@end example
+
+The @code{prefix} property holds the bot prefix. Set a custom prefix here if you want.
+The @code{channel} property holds the suggestion channel ID. In this channel, the bot will listen for incoming messages and convert them into a suggestion. 
+It is recommended to set up slowmode on the channel to avoid spamming.
+
+You should go to your Discord Server and copy the ID of the suggestions channel. You may create a new one if you don't have already. 
+@url{https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-, Learn more about how to copy channel IDs, Learn more about how to copy channel IDs}.
+
+Then paste the copied ID into the @code{channel} property value (which is empty string by default).
+
+You can set the @code{CONFIG_FILE} environment variable to set a different location for the @code{config.json} file.
+
+@section The @code{suggestions.json} file
+@code{suggestions.json} file is the place where the bot stores suggestion information. It is like a database of the bot. You should not modify this file.
+You can set the @code{SUGGESTIONS_FILE_PATH} environment variable to set a different location for the @code{suggestions.json} file.
+
+@section Environment Variables
+There are a few environment variables that you might need to set before you run the bot:
+
+@itemize @bullet
+@item
+@b{@code{BOT_TOKEN}}: The most important variable. You must set this for the bot to work. The value of this variable should be same as your bot's token.
+
+@item 
+@b{@code{CONFIG_FILE}}: Specify where the @code{config.json} file is located. If the config file is located at the default location, you don't need to set this variable.
+
+@item
+@b{@code{SUGGESTIONS_FILE_PATH}}: Specify where the @code{SUGGESTIONS_FILE_PATH.json} file is located. If the suggestions file is located at the default location, you don't need to set this variable.
+@end itemize

@@ -1,0 +1,24 @@
+@chapter Introduction to LightBot
+
+LightBot is a Discord bot, that allows you to manage suggestions from your members in your server. 
+There are a lots of features that does all the hard work behind the scenes for you.
+
+@section Features
+
+LightBot has the following features:
+
+@itemize @bullet
+@item Suggestion creation based on a suggestion channel, or a manual command
+@item Restrict who can create suggestions
+@item Delete suggestions
+@item View suggestion meta
+@item Change suggestion status (Notify user or Silent)
+@item A few additional fun commands
+@end itemize
+
+@section Contributors
+Thanks to all the contributors.
+
+@itemize @bullet
+@item @url{https://virtual-designer.github.io, Ar Rakin, Ar Rakin}
+@end itemize

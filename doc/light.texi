@@ -41,7 +41,6 @@ Published by the OSN Software Foundation @*
 @sp 2
 @end titlepage
 
-@contents
 
 @node Top, Introduction
 @top LightBot
@@ -49,11 +48,21 @@ Published by the OSN Software Foundation @*
 @insertcopying
 
 @menu
-* Introduction::                Introduction to LightBot.
+* Introduction::                       Introduction to LightBot.
+* Configuring LightBot::               Settings and configuration of the bot.
+* GNU Free Documentation License::     License of this manual.
 @end menu
 
-@node Introduction
-@chapter Introduction to LightBot
+@summarycontents
+@contents
 
-LightBot is a Discord bot, that allows you to manage suggestions from your members in your server. 
-There are a lots of features that does with all the hard work behind the scenes for you.
+@node Introduction
+@include introduction.texi
+
+@node Configuring LightBot
+@include configuring_lightbot.texi
+
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
+@cindex FDL, GNU Free Documentation License
+@include fdl.texi
