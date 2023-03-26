@@ -319,3 +319,46 @@ void command_about(struct discord *client, const struct discord_message *event) 
 
     discord_create_message(client, event->channel_id, &params, NULL);
 }
+
+/*
+* The `delete` command. 
+* Deletes a suggestion.
+*
+* Usage: <prefix>delete <message_id>
+*/
+void command_delete(struct discord *client, const struct discord_message *event) {
+    if (strlen(event->content) == 0) {
+        struct discord_create_message params = { .content = ":x: Please provide the suggestion message ID." };
+        discord_create_message(client, event->channel_id, &params, NULL);
+        return;
+    }
+
+    validate_message_id(client, event);
+
+    const char *channel_id_string = config_get_string("channel");
+    long long int channel_id = atoll(channel_id_string);
+
+    char *id = strtok(event->content, " ");
+    long long int message_id = atoll(id);
+
+    struct discord_messages msgs = { 0 };
+
+    get_suggestion_message(client, event, message_id, channel_id, &msgs);
+
+    json_object *suggestion = suggestions_get(id);
+
+    if (suggestion == NULL) {
+        struct discord_create_message params = { .content = ":x: No such suggestion found." };
+        discord_create_message(client, event->channel_id, &params, NULL);
+        return;
+    }
+
+    suggestions_delete(id);
+
+    struct discord_delete_message reason = { "Deleting the suggestion message due to user command" };
+    
+    discord_delete_message(client, channel_id, message_id, &reason, NULL);
+
+    struct discord_create_message params = { .content = "The suggestion was deleted." };
+    discord_create_message(client, event->channel_id, &params, NULL);
+}

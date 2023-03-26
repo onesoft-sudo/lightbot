@@ -186,6 +186,11 @@ json_object *suggestions_get(char *id) {
     return json_object_object_get(root, id);
 }
 
+bool suggestions_delete(char *id) {
+    json_object_object_del(root, id);
+    return suggestions_save();
+}
+
 enum suggestion_status suggestions_status_from_string(char *str) {
     char *lower = utils_strtolower(str);
 

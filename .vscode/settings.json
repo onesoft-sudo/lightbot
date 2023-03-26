@@ -4,6 +4,7 @@
     "stdlib.h": "c",
     "types.h": "c",
     "config.h": "c",
-    "common.h": "c"
+    "common.h": "c",
+    "string.h": "c"
   }
 }

@@ -20,6 +20,7 @@
 #include <concord/discord.h>
 #include <concord/log.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "utils.h"
 #include "common.h"
@@ -40,11 +41,7 @@ void on_message(struct discord *client, const struct discord_message *event) {
 
     sprintf(event_channel_id, "%" PRIu64, event->channel_id);
 
-    printf("%s\n", (char *) &event_channel_id);
-
-    if (strcmp(event_channel_id, channel) == 0) {
-        puts("Suggestion Channel");
-        
+    if (strcmp(event_channel_id, channel) == 0) {        
         struct discord_delete_message delete_params = {
             .reason = "Suggestion message was removed and re-sent by the bot"
         };
@@ -80,8 +77,6 @@ void on_message(struct discord *client, const struct discord_message *event) {
                 event->author->avatar, 0x007bff,
                 suggestions_status_stringify(SUGGESTION_PENDING),
                 suggestions_status_stringify_description(SUGGESTION_PENDING));
-
-        printf("%s\n", embed_json);
         
         struct discord_embed embed = {0};
 

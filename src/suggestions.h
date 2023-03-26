@@ -45,5 +45,6 @@ json_object *suggestions_get(char *id);
 enum suggestion_status suggestions_status_from_string(char *str);
 bool suggestions_save();
 int suggestions_status_color(enum suggestion_status status);
+bool suggestions_delete(char *id);
 
 #endif /* __SUGGESTIONS_H__  */

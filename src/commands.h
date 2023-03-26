@@ -22,9 +22,12 @@
 #include <stdlib.h>
 #include <concord/discord.h>
 
-void command_status(struct discord *client, const struct discord_message *event);
-void command_showstatus(struct discord *client, const struct discord_message *event);
-void command_setstatus(struct discord *client, const struct discord_message *event);
-void command_about(struct discord *client, const struct discord_message *event);
+#define COMMAND_PARAMS struct discord *client, const struct discord_message *event
+
+void command_status(COMMAND_PARAMS);
+void command_showstatus(COMMAND_PARAMS);
+void command_setstatus(COMMAND_PARAMS);
+void command_about(COMMAND_PARAMS);
+void command_delete(COMMAND_PARAMS);
 
 #endif /* __COMMANDS_H__  */

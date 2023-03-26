@@ -45,6 +45,7 @@ static void set_command_handlers() {
     discord_set_on_command(client, "showstatus", &command_showstatus);
     discord_set_on_command(client, "viewstatus", &command_showstatus);
     discord_set_on_command(client, "about", &command_about);
+    discord_set_on_command(client, "delete", &command_delete);
 }
 
 static void set_event_handlers() {
@@ -58,10 +59,10 @@ static void configure_client() {
 }
 
 static void print_version() {
-    printf("LightBot version " VERSION "\
-Copyright (C) 2023 OSN Inc.\
-License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\
-This is free software: you are free to change and redistribute it.\
+    printf("LightBot version " VERSION "\n\
+Copyright (C) 2023 OSN Inc.\n\
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\n\
+This is free software: you are free to change and redistribute it.\n\
 There is NO WARRANTY, to the extent permitted by law.\n");
 }
 
