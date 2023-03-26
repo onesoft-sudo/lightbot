@@ -77,7 +77,7 @@ Options:\n\
 \n\
 LightBot support email: <support@onesoftnet.eu.org>\n\
 Discord Server (this server is not owned by OSN, it's for\n\
-support cases or informal discussion about everything): <https://discord.gg/tesworld>\
+support cases or informal discussion about everything): <https://discord.gg/dKArUwBMKw>\
 \n", argv_0);
 }
 
