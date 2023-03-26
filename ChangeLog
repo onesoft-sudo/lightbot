@@ -1,0 +1,161 @@
+2023-03-26  Ar Rakin  <rakinar2@onesoftnet.eu.org>
+
+	chore: update gitignore
+
+	perf(setstatus): do not modify the suggestion if the statuses are same
+
+	chore: update license
+
+2023-03-06  Ar Rakin  <rakinar2@gmail.com>
+
+	docs: update pages
+
+	docs: add doc folder
+
+2023-03-05  Ar Rakin  <rakinar2@gmail.com>
+
+	chore: remove uneeded directories
+
+	refactor: config file stored in /etc
+
+2023-03-04  Ar Rakin  <rakinar2@gmail.com>
+
+	build: fix makefile.am
+
+	style: follow GNU standards
+
+	fix: change max thread limit
+
+	build: specify autoconf package url
+
+	fix(server): gcc warning about ignoring fscanf return value
+
+	Merge branch 'main' of https://github.com/onesoft-sudo/lightbot
+
+	feat: add about command
+
+2023-03-03  Ar Rakin  <68149013+virtual-designer@users.noreply.github.com>
+
+	fix: make use of `restrict` keyword
+
+2023-03-03  Ar Rakin  <rakinar2@gmail.com>
+
+	style: update commands.c
+
+	feat(server): use threads to handle requests in parallel
+
+2023-03-02  Ar Rakin  <rakinar2@gmail.com>
+
+	feat: DM user when their suggestion gets accepted
+
+	feat: add suggestion status view command
+
+2023-03-01  Ar Rakin  <rakinar2@gmail.com>
+
+	fix: minor issue fixes
+
+	feat(server): send uptime and version information
+	When a GET request is made on / of the server, it will return some JSON information that will contain the version and uptime of the bot system.
+
+	feat(server): send uptime and version information
+	When a GET request is made on / of the server, it will return some JSON information that will contain the version and uptime of the bot system.
+
+2023-03-01  Ar Rakin  <68149013+virtual-designer@users.noreply.github.com>
+
+	style(server): fix typo in comments
+
+2023-03-01  Ar Rakin  <rakinar2@gmail.com>
+
+	ci: update workflows
+
+	ci: update workflows
+
+	ci: update workflows
+
+	ci: update workflows
+
+	style(server): add comments to better document the code
+
+	refactor(server): extract strerror() call into a function
+
+	feat: api server
+
+2023-02-26  Ar Rakin  <rakinar2@gmail.com>
+
+	chore: add license comments
+
+	build: fixup
+
+	chore: fixup
+
+2023-02-25  Ar Rakin  <rakinar2@gmail.com>
+
+	chore: update gitignore
+
+	build: setup autotools
+
+	build: setup autotools
+
+	build: setup autotools
+
+	fix: multiple definitions of a global variable
+
+	ci: fix workflows
+
+	ci: add workflows
+
+	feat(suggestions): suggestion status change command
+
+2023-02-24  Ar Rakin  <rakinar2@gmail.com>
+
+	refactor: function names
+
+	feat: basic suggestion command
+
+2022-08-31  Ar Rakin  <rakinar2@gmail.com>
+
+	Update Makefile.am
+
+	Update Makefile.am
+
+	Update Makefile.am
+
+	Update Makefile.am
+
+	Update build.yml
+
+	Update build.yml
+
+	Update build.yml
+
+	Update build.yml
+
+	ci: update workflows
+
+	fix: downgrade automake
+
+	fix: downgrade automake
+
+	Merge branch 'main' of https://github.com/onesoft-sudo/lightbot
+
+	fix: downgrade automake
+
+	ci: update workflows
+
+	ci: add workflows
+
+	feat: create custom shortcuts
+
+	feat: implement basic shortcut viewing feature
+
+2022-08-30  Ar Rakin  <rakinar2@gmail.com>
+
+	refactor: rename project
+
+2022-08-28  Ar Rakin  <rakinar2@gmail.com>
+
+	feat: add support of JSON configs
+
+	fix: file name at the top
+
+	feat: initial commit
