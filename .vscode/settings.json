@@ -2,6 +2,7 @@
   "prettier.enable": false,
   "files.associations": {
     "stdlib.h": "c",
-    "types.h": "c"
+    "types.h": "c",
+    "config.h": "c"
   }
 }

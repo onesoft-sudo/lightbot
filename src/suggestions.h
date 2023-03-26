@@ -23,7 +23,7 @@
 #include <concord/discord.h>
 #include <json-c/json.h>
 
-#define SUGGESTIONS_FILE_PATH getenv("SUGGESTIONS_FILE_PATH")
+#define SUGGESTIONS_FILE_PATH getenv("SUGGESTIONS_FILE")
 
 enum suggestion_status {
     SUGGESTION_PENDING,
@@ -42,7 +42,7 @@ bool suggestions_create(u64snowflake msg_id, u64snowflake user_id, char *content
 const char *suggestions_status_stringify(enum suggestion_status status);
 const char *suggestions_status_stringify_description(enum suggestion_status status);
 json_object *suggestions_get(char *id);
-enum suggestion_status utils_status_from_string(char *str);
+enum suggestion_status suggestions_status_from_string(char *str);
 bool suggestions_save();
 int suggestions_status_color(enum suggestion_status status);
 

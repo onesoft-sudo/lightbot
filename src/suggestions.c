@@ -186,7 +186,7 @@ json_object *suggestions_get(char *id) {
     return json_object_object_get(root, id);
 }
 
-enum suggestion_status utils_status_from_string(char *str) {
+enum suggestion_status suggestions_status_from_string(char *str) {
     char *lower = utils_strtolower(str);
 
     if (strcmp(lower, "pending") == 0) {
