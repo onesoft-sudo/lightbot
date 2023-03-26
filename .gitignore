@@ -20,3 +20,7 @@ build-aux
 src/light
 config.h
 config.h.in
+/configure 
+*.in 
+Makefile
+.deps
