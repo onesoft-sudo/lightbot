@@ -1,5 +1,9 @@
 2023-03-26  Ar Rakin  <rakinar2@onesoftnet.eu.org>
 
+	chore: update TES invite URL
+
+	chore: update changelog
+
 	chore: update gitignore
 
 	perf(setstatus): do not modify the suggestion if the statuses are same
