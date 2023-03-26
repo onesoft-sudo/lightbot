@@ -1,3 +1,7 @@
 {
-  "prettier.enable": false
+  "prettier.enable": false,
+  "files.associations": {
+    "stdlib.h": "c",
+    "types.h": "c"
+  }
 }
